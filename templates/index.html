@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Punktu sistēma</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="main_body">
+    <div class="container">
+        <div class="ClassInfo">
+            <h1>Klases</h1>
+            <select id="classSelect"></select>
+            <button onclick="showDetails()">Skatīt</button>
+            <div id="details" style="display: none;">
+                <h1 id="classDetails"></h1>
+            </div>
+        </div>
+
+        <h1>Top 3 klase</h1>
+        <div id="topClasses"></div>
+
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>

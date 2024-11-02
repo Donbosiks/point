@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panelis</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Pievienot klasi</h1>
+        <input type="text" id="className" placeholder="Klases nosaukums">
+        <button onclick="addClass()">Pievienot</button>
+        
+        <h1>Punktu pievienošana</h1>
+        <select id="existingClassSelect"></select>
+        <input type="number" id="classPoints" placeholder="Punkti">
+        <input type="text" id="classExplanation" placeholder="Skaidrojums">
+        <button onclick="addPoints()">Pievienot</button>
+    </div>
+    <script src="/static/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.main_body {
+    background-image: url("wallpaper.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.container {
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+#ClassInfo {
+    justify-content: left;
+}
+
+#topClasses {
+    display: flex;
+}
+
+    #topClasses div {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+select, button, input {
+    margin: 10px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+@media (max-width: 800px) {
+    .main_body {
+        background-size: auto 100%;
+        background-position: center center;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+    select, button, input {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
