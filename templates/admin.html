@@ -5,9 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panelis</title>
     <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/admin.js" defer></script>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="login-container">
+        <h2>Admin Login</h2>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username"><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br><br>
+        <button onclick="login()">Login</button>
+    </div>
+
+    <div class="container" id="admin-container" style="display: none;">
         <h1>Pievienot klasi</h1>
         <input type="text" id="className" placeholder="Klases nosaukums">
         <button onclick="addClass()">Pievienot</button>
@@ -18,6 +28,5 @@
         <input type="text" id="classExplanation" placeholder="Skaidrojums">
         <button onclick="addPoints()">Pievienot</button>
     </div>
-    <script src="/static/admin.js"></script>
 </body>
 </html>
