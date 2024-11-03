@@ -15,7 +15,7 @@ function addClass() {
     fetch('/addClass', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: className, points: classPoints, explanation: classExplanation })
+        body: JSON.stringify({ name: className, points: classPoints})
     })
     .then(response => response.json())
     .then(data => {

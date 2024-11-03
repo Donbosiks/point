@@ -20,16 +20,16 @@ def admin(name=None):
 def login():
     login_data = request.json
     if login_data['username'] == os.getenv('LOGIN') and login_data['password'] == os.getenv('PASSWORD'):
-        return jsonify({'message': 'Login successful'}), 200
+        200
     else:
-        return jsonify({'message': 'Invalid credentials'}), 
+        return jsonify(message='Nepareiz logins vai parole'), 500
 
 def init_db():
     with sqlite3.connect('database.db') as conn:
         conn.execute('''CREATE TABLE IF NOT EXISTS classes 
-                        (id INTEGER PRIMARY KEY, name TEXT, points INTEGER)''')
+                        (id INTEGER PRIMARY KEY, name TEXT, points FLOAT)''')
         conn.execute('''CREATE TABLE IF NOT EXISTS explanations
-                        (id INTEGER PRIMARY KEY, item_name TEXT, explanation TEXT, points INTEGER)''')
+                        (id INTEGER PRIMARY KEY, item_name TEXT, explanation TEXT, points FLOAT)''')
         conn.commit()
 
 @app.route('/getClassDetails', methods=['POST'])
@@ -55,12 +55,16 @@ def get_top_classes():
 @app.route('/addClass', methods=['POST'])
 def add_class():
     new_class = request.json
-    points = new_class.get('points', 0)  # Устанавливаем значение по умолчанию
+    school_class = new_class['name']
+
+    if len(school_class) > 4:
+        return jsonify(message='Класс не добавлен'), 500
+
     with sqlite3.connect('database.db') as conn:
         conn.execute("INSERT INTO classes (name, points) VALUES (?, ?)",
-                     (new_class['name'], points))
+                     (school_class, 0))
         conn.execute("INSERT INTO explanations (item_name, explanation) VALUES (?, ?)",
-                     (new_class['name'], new_class.get('explanation', '')))
+                     (school_class, new_class.get('explanation', 'Creation class')))
         conn.commit()
     return jsonify(message='Класс добавлен успешно')
 
@@ -76,6 +80,18 @@ def get_classes():
 def add_points():
     class_name = request.json['name']
     points = request.json['points']
+
+    try:
+        points = float(points)
+    except ValueError:
+        points = 0
+
+    if points > 999 or points < -101:
+         points = 0
+
+    if points == 0:
+        return jsonify({'message': 'Punkti nebija pievinoti'}), 500
+         
     explanation = request.json['explanation']
 
     with sqlite3.connect('database.db') as conn:
