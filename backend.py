@@ -1,28 +1,60 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import sqlite3
 from dotenv import load_dotenv
+from datetime import timedelta
 import os
-
 # Загрузка переменных окружения из .env файла
 load_dotenv()
 
 app = Flask(__name__)
+app.secret_key = os.getenv('SECRET_KEY')
+
+# Инициализация Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+# Устанавливаем время жизни сессии в 2 часа
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=2)
+
+# Пользовательская модель
+class User(UserMixin):
+    def __init__(self, id):
+        self.id = id
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User(user_id)
 
 @app.route('/')
 def main(name=None):
     return render_template('index.html', person=name)
 
-@app.route('/admin')
-def admin(name=None):
-    return render_template('admin.html', person=name)
-
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    return render_template('login.html')
+
+@app.route('/login_check', methods=['POST'])
+def login_check():
     login_data = request.json
     if login_data['username'] == os.getenv('LOGIN') and login_data['password'] == os.getenv('PASSWORD'):
-        200
+        user = User(id=login_data['username'])
+        login_user(user, duration=timedelta(hours=2))
+        return jsonify({'redirect': url_for('admin')}), 200
     else:
-        return jsonify(message='Nepareiz logins vai parole'), 500
+        return jsonify({}), 401
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+@app.route('/admin')
+@login_required
+def admin(name=None):
+    return render_template('admin.html', person=name)
 
 def init_db():
     with sqlite3.connect('database.db') as conn:
@@ -32,18 +64,6 @@ def init_db():
                         (id INTEGER PRIMARY KEY, item_name TEXT, explanation TEXT, points FLOAT)''')
         conn.commit()
 
-@app.route('/getClassDetails', methods=['POST'])
-def get_class_details():
-    class_name = request.json['class']
-    with sqlite3.connect('database.db') as conn:
-        cur = conn.cursor()
-        cur.execute("SELECT points FROM classes WHERE name = ?", (class_name,))
-        data = cur.fetchone()
-        cur.execute("SELECT explanation FROM explanations WHERE item_name = ?", (class_name,))
-        explanation_data = cur.fetchall()
-        explanations = [row[0] for row in explanation_data]
-    return jsonify(count=data[0], recent=explanations)
-
 @app.route('/getTopClasses', methods=['GET'])
 def get_top_classes():
     with sqlite3.connect('database.db') as conn:
@@ -51,22 +71,6 @@ def get_top_classes():
         cur.execute("SELECT name, points FROM classes ORDER BY points DESC LIMIT 3")
         data = cur.fetchall()
     return jsonify([{'name': row[0], 'points': row[1]} for row in data])
-
-@app.route('/addClass', methods=['POST'])
-def add_class():
-    new_class = request.json
-    school_class = new_class['name']
-
-    if len(school_class) > 4:
-        return jsonify(message='Класс не добавлен'), 500
-
-    with sqlite3.connect('database.db') as conn:
-        conn.execute("INSERT INTO classes (name, points) VALUES (?, ?)",
-                     (school_class, 0))
-        conn.execute("INSERT INTO explanations (item_name, explanation) VALUES (?, ?)",
-                     (school_class, new_class.get('explanation', 'Creation class')))
-        conn.commit()
-    return jsonify(message='Класс добавлен успешно')
 
 @app.route('/getClasses', methods=['GET'])
 def get_classes():
@@ -76,7 +80,27 @@ def get_classes():
         data = cur.fetchall()
     return jsonify([{'id': row[0], 'name': row[1]} for row in data])
 
+
+@app.route('/addClass', methods=['POST'])
+@login_required
+def add_class():
+    new_class = request.json
+    school_class = new_class['name']
+
+    if len(school_class) > 4:
+        return jsonify(message='Klase nebija pievienota'), 401
+
+    with sqlite3.connect('database.db') as conn:
+        conn.execute("INSERT INTO classes (name, points) VALUES (?, ?)",
+                     (school_class, 0))
+        conn.execute("INSERT INTO explanations (item_name, explanation) VALUES (?, ?)",
+                     (school_class, new_class.get('explanation', 'Creation class')))
+        conn.commit()
+    return jsonify(message='Klase bija pievinota')
+
+
 @app.route('/addPoints', methods=['POST'])
+@login_required
 def add_points():
     class_name = request.json['name']
     points = request.json['points']
@@ -90,7 +114,7 @@ def add_points():
          points = 0
 
     if points == 0:
-        return jsonify({'message': 'Punkti nebija pievinoti'}), 500
+        return jsonify({'message': 'Punkti nebija pievinoti'}), 415
          
     explanation = request.json['explanation']
 
@@ -105,9 +129,20 @@ def add_points():
             cur.execute("INSERT INTO explanations (item_name, explanation, points) VALUES (?, ?, ?)",
                         (class_name, explanation, points))
             conn.commit()
-            return jsonify({'message': 'Points added successfully'})
+            return jsonify({'message': 'Punkti pievinoti veiksmigi'})
         else:
-            return jsonify({'message': 'Class not found'})
+            return jsonify({'message': 'Klase nebija atrasta'})
+        
+@app.route('/getClassDetails', methods=['POST'])
+def get_class_details():
+    class_name = request.json['class']
+    with sqlite3.connect('database.db') as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT points FROM classes WHERE name = ?", (class_name,))
+        data = cur.fetchone()
+        cur.execute("SELECT explanation FROM explanations WHERE item_name = ?", (class_name,))
+        explanation_data = cur.fetchall()
+        explanations = [row[0] for row in explanation_data]
 
 if __name__ == '__main__':
     init_db()

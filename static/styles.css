@@ -41,6 +41,12 @@ select, button, input {
     font-size: 16px;
 }
 
+#login_error {
+    display: none;
+    color: red;
+    font-size: 2vh;
+}
+
 @media (max-width: 800px) {
     .main_body {
         background-size: auto 100%;

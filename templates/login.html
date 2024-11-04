@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logins</title>
+    <link rel="icon" href="/static/logo.png" type="image/icon type">
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/login.js" defer></script>
+</head>
+<body>
+    <div class="container" id="login-container">
+        <h2>Ielogosana admin paneli</h2>
+        <form>
+            <input type="text" id="username" name="username" placeholder="Logins"><br><br>
+            <input type="password" id="password" name="password" placeholder="Parole"><br>
+            <p id="login_error">Logins vai parole nepareiza</p>
+            <input type="submit" placeholder="Login" onclick="login()" value="iiet"></input>
+        </form>
+    </div>
+</body>
+</html>

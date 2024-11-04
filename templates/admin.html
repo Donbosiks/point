@@ -1,32 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="lv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panelis</title>
     <link rel="stylesheet" href="/static/styles.css">
+    <link rel="icon" href="/static/logo.png" type="image/icon type">
     <script src="/static/admin.js" defer></script>
 </head>
 <body>
-    <div class="container" id="login-container">
-        <h2>Admin Login</h2>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username"><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"><br><br>
-        <button onclick="login()">Login</button>
-    </div>
-
-    <div class="container" id="admin-container" style="display: none;">
+    <div class="container" id="admin-container">
         <h1>Pievienot klasi</h1>
         <input type="text" id="className" placeholder="Klases nosaukums">
-        <button onclick="addClass()">Pievienot</button>
+        <input type="submit" onclick="addClass()" value="Pievienot"></input>
         
         <h1>Punktu pievienošana</h1>
         <select id="existingClassSelect"></select>
         <input type="number" id="classPoints" placeholder="Punkti">
         <input type="text" id="classExplanation" placeholder="Skaidrojums">
-        <button onclick="addPoints()">Pievienot</button>
+        <input type="submit" onclick="addPoints()" value="Pievienot"></input>
     </div>
 </body>
 </html>
