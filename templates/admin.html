@@ -31,8 +31,10 @@
 
             <h2>Ielupladet PDF Failu</h2> 
                 <form id="uploadForm" enctype="multipart/form-data" style="display: flex; justify-content: center;"> 
-                    <div style="display: flex; flex-direction: column;">
+                    <div class="fileSelect">
+                        <label for="pdfFile" id="pdfLabel">Izvelaties kriteriju</label>
                         <input type="file" id="pdfFile" name="pdf" accept="application/pdf" required>
+                        <label for="pdfFile_1" id="pdfLabel">Izvelaties dežures grafiku</label>
                         <input type="file" id="pdfFile_1" name="pdf" accept="application/pdf" required>
                     </div>
                     <button type="button" onclick="uploadPDF()">Ielupladet</button> 

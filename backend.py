@@ -202,7 +202,7 @@ def upload_criteria():
             filename1 = 'kriterijas.pdf'  # Задать имя для сохраненного первого файла
             file_path1 = os.path.join(UPLOAD_FOLDER, filename1)
             file1.save(file_path1)
-            response_message = 'First file successfully uploaded'
+            response_message = 'Kriterija bija atjanotas'
         else:
             return jsonify(error='Invalid file format for the first PDF, only PDFs are allowed'), 400
     
@@ -216,7 +216,7 @@ def upload_criteria():
             filename2 = 'grafiks.pdf'  # Задать имя для сохраненного второго файла
             file_path2 = os.path.join(UPLOAD_FOLDER, filename2)
             file2.save(file_path2)
-            response_message = 'Second file successfully uploaded'
+            response_message = 'Dežures grafiks bija atjanotas'
         else:
             return jsonify(error='Invalid file format for the second PDF, only PDFs are allowed'), 400
     

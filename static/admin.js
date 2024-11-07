@@ -108,11 +108,7 @@ function uploadPDF() {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.error) {
-            document.getElementById('response').innerText = `Error: ${data.error}`;
-        } else {
-            document.getElementById('response').innerText = `Success: ${data.message}`;
-        }
+        alert(data.message);
     })
     .catch(error => {
         console.error('Error:', error);

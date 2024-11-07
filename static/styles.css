@@ -110,6 +110,10 @@ select, button, input {
         align-items: center;
     }
 
+    #classExplanation_main p{
+        width: 80%;
+    }
+
 #classExplanation {
     display: none;
     flex-direction: column;
@@ -138,6 +142,26 @@ footer {
         margin-right: 1%;
         color: black;
         text-decoration: none;
+    }
+
+.fileSelect {
+    display: flex;
+    flex-direction: column;
+}
+    .fileSelect label{
+        text-align: left;
+    }
+
+    #uploadForm button{
+        border-radius: 10px;
+        border: gray solid 0.5px;
+        background-color: rgb(107, 252, 107);
+        height: 100%;
+        margin-top: 4vh;
+    }
+
+    #uploadForm button:hover{
+        background-color: rgb(143, 254, 143);
     }
 
 @media (max-width: 800px) {
