@@ -19,8 +19,33 @@ body {
 }
 
 h1 {
-    margin-bottom: 20px;
+    font-family: 'Garamond Premiere Pro';
+    font-weight: bold;
+    font-style: normal;
 }
+
+.ShowDetails {
+    background-color: rgb(255, 71, 73);
+    border-radius: 10px;
+    border: none;
+    color: rgb(231, 231, 231);
+}
+
+    .ShowDetails:hover {
+        background-color: rgb(255, 97, 100);
+        color: rgb(233, 233, 233);
+        transition: 0.1s;
+    }
+
+#classDetails {
+    font-size: 4vh;
+}
+
+#classSelect {
+    border: gray solid 1px;
+    border-radius: 10px;
+}
+
 
 #ClassInfo {
     justify-content: left;
@@ -28,6 +53,7 @@ h1 {
 
 #topClasses {
     display: flex;
+    justify-content: space-evenly;
 }
 
     #topClasses div {
@@ -35,10 +61,61 @@ h1 {
         margin-right: 10px;
     }
 
+#top_class_head, #top_class_text {
+    font-family: 'Garamond Premiere Pro';
+    font-style: normal;
+}
+
+    #top_class_head {
+        font-weight: bold;
+    }
+
+    #top_class_text {
+        font-weight: normal;
+    }
+
+.classExplanation_div {
+    display: -webkit-box;
+    width: 80%;
+}
+
+    .classExplanation_div .two {
+        margin-left: auto;
+    }
+
+
 select, button, input {
     margin: 10px;
     padding: 10px;
     font-size: 16px;
+    border-radius: 10px;
+    border: gray solid 0.5px;
+}
+
+    .submit {
+        background-color: rgb(107, 252, 107);
+    }
+
+    .submit:hover {
+        background-color: rgb(143, 254, 143);
+    }
+
+    #classExplanation_main {
+        display: flex;
+        flex-direction: column;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        align-items: center;
+    }
+
+#classExplanation {
+    display: none;
+    flex-direction: column;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
 }
 
 #login_error {
@@ -53,9 +130,6 @@ select, button, input {
         background-position: center center;
     }
 
-    h1 {
-        font-size: 24px;
-    }
     select, button, input {
         font-size: 14px;
         padding: 8px;

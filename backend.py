@@ -62,6 +62,8 @@ def init_db():
                         (id INTEGER PRIMARY KEY, name TEXT, points FLOAT)''')
         conn.execute('''CREATE TABLE IF NOT EXISTS explanations
                         (id INTEGER PRIMARY KEY, item_name TEXT, explanation TEXT, points FLOAT)''')
+        conn.execute('''CREATE TABLE IF NOT EXISTS criteria
+                        (id INTEGER PRIMARY KEY, criteria_user TEXT, criteria_admin TEXT)''')
         conn.commit()
 
 @app.route('/getTopClasses', methods=['GET'])
@@ -80,6 +82,13 @@ def get_classes():
         data = cur.fetchall()
     return jsonify([{'id': row[0], 'name': row[1]} for row in data])
 
+@app.route('/getCriteria', methods=['GET'])
+def get_criteria():
+    with sqlite3.connect('database.db') as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT id, criteria_admin FROM criteria")
+        data = cur.fetchall()
+    return jsonify([{'id': row[0], 'criteria_admin': row[1]} for row in data])
 
 @app.route('/addClass', methods=['POST'])
 @login_required
@@ -93,8 +102,8 @@ def add_class():
     with sqlite3.connect('database.db') as conn:
         conn.execute("INSERT INTO classes (name, points) VALUES (?, ?)",
                      (school_class, 0))
-        conn.execute("INSERT INTO explanations (item_name, explanation) VALUES (?, ?)",
-                     (school_class, new_class.get('explanation', 'Creation class')))
+        conn.execute("INSERT INTO explanations (item_name, explanation, points) VALUES (?, ?, ?)",
+                     (school_class, 'Klases izveidosana', 0))
         conn.commit()
     return jsonify(message='Klase bija pievinota')
 
@@ -133,16 +142,52 @@ def add_points():
         else:
             return jsonify({'message': 'Klase nebija atrasta'})
         
+@app.route('/addCriteria', methods=['POST'])
+@login_required
+def add_criteria():
+    criteriaUser = request.json['criteriaUser']
+    criteriaAdmin = request.json['criteriaAdmin']
+
+    with sqlite3.connect('database.db') as conn:
+        cur = conn.cursor()
+        print(criteriaUser)
+
+        cur.execute("INSERT INTO criteria (criteria_user, criteria_admin) VALUES (?, ?)",
+                    (criteriaUser, criteriaAdmin))
+        conn.commit()
+        return jsonify({'message': 'Kriterijas pievinoti veiksmigi'})
+        
+# @app.route('/getClassDetails', methods=['POST'])
+# def get_class_details():
+#     class_name = request.json['class']
+#     with sqlite3.connect('database.db') as conn:
+#         cur = conn.cursor()
+#         cur.execute("SELECT points FROM classes WHERE name = ?", (class_name,))
+#         cur.execute("SELECT explanation, points FROM explanations WHERE item_name = ?", (class_name,))
+#         data = cur.fetchone()
+#     return jsonify(count=data[0])
+
 @app.route('/getClassDetails', methods=['POST'])
 def get_class_details():
     class_name = request.json['class']
     with sqlite3.connect('database.db') as conn:
         cur = conn.cursor()
+        
+        # Получение общего количества пунктов для класса
         cur.execute("SELECT points FROM classes WHERE name = ?", (class_name,))
-        data = cur.fetchone()
-        cur.execute("SELECT explanation FROM explanations WHERE item_name = ?", (class_name,))
-        explanation_data = cur.fetchall()
-        explanations = [row[0] for row in explanation_data]
+        total_points = cur.fetchone()
+        
+        # Получение последних трех добавлений пунктов для класса
+        cur.execute("SELECT explanation, points FROM explanations WHERE item_name = ? ORDER BY id DESC LIMIT 3", (class_name,))
+        last_three_additions = cur.fetchall()
+        
+        data = {
+            'total_points': total_points[0],
+            'details': [{'explanation': row[0], 'points_added': row[1]} for row in last_three_additions]
+        }
+        
+    return jsonify(data)
+
 
 if __name__ == '__main__':
     init_db()
