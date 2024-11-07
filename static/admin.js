@@ -12,8 +12,8 @@ function fetchCriteria() {
     .then(response => response.json()) 
     .then(classes => { const classSelect = document.getElementById('criteriaSelect'); 
         classes.forEach(cls => { const newOption = document.createElement('option'); 
-            newOption.value = cls.criteria_admin; 
-            newOption.text = cls.criteria_admin; 
+            newOption.value = cls.criteria_user; 
+            newOption.text = cls.criteria_user; 
             classSelect.insertBefore(newOption, 
             classSelect.firstChild); 
         });
@@ -48,10 +48,10 @@ function addClass() {
 function addPoints() {
     const className = document.getElementById('existingClassSelect').value;
     const classPoints = parseInt(document.getElementById('classPoints').value);
-    const classExplanation = document.getElementById('criteriaSelect').value;
+    let classExplanation = document.getElementById('criteriaSelect').value;
 
     if(document.getElementById('criteriaSelect').value == "cits"){
-        const classExplanation = document.getElementById('classExplanation').value;
+        classExplanation = document.getElementById("classExplanation").value;
     }
     
 
@@ -82,5 +82,44 @@ function addCriteria() {
         alert(data.message);
     });
 }
+
+function uploadPDF() {
+    const formData = new FormData();
+    const pdfFile = document.getElementById('pdfFile').files[0];
+    const pdfFile_1 = document.getElementById('pdfFile_1').files[0];
+
+    // Проверка и добавление первого файла
+    if (pdfFile) {
+        formData.append('pdf', pdfFile);
+    } else {
+        formData.append('pdf', 'none');
+    }
+
+    // Проверка и добавление второго файла
+    if (pdfFile_1) {
+        formData.append('pdf_1', pdfFile_1);
+    } else {
+        formData.append('pdf_1', 'none');
+    }
+
+    fetch('/upload_criteria', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            document.getElementById('response').innerText = `Error: ${data.error}`;
+        } else {
+            document.getElementById('response').innerText = `Success: ${data.message}`;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('response').innerText = 'An error occurred while uploading the file.';
+    });
+}
+
+
 
 fetchClasses();

@@ -26,9 +26,17 @@
             <input class="submit" type="submit" onclick="addPoints()" value="Pievienot"></input>
 
         <h1>Kriteriju pievienošana</h1>
-            <input type="text" id="criteriaUser" placeholder="Lietotājam rādīts teksts">
-            <input type="text" id="criteriaAdmin" placeholder="Kriterijas">
+            <input type="text" id="criteriaUser" placeholder="Kriterijas">
             <input class="submit" type="submit" onclick="addCriteria()" value="Pievienot"></input>
+
+            <h2>Ielupladet PDF Failu</h2> 
+                <form id="uploadForm" enctype="multipart/form-data" style="display: flex; justify-content: center;"> 
+                    <div style="display: flex; flex-direction: column;">
+                        <input type="file" id="pdfFile" name="pdf" accept="application/pdf" required>
+                        <input type="file" id="pdfFile_1" name="pdf" accept="application/pdf" required>
+                    </div>
+                    <button type="button" onclick="uploadPDF()">Ielupladet</button> 
+                </form>
         
 
     </div>

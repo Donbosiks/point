@@ -35,6 +35,14 @@ def main(name=None):
 def login():
     return render_template('login.html')
 
+@app.route('/pdf', methods=['GET', 'POST'])
+def pdf():
+    return render_template('pdf.html')
+
+@app.route('/grafiks', methods=['GET', 'POST'])
+def grafiks():
+    return render_template('grafiks.html')
+
 @app.route('/login_check', methods=['POST'])
 def login_check():
     login_data = request.json
@@ -63,7 +71,7 @@ def init_db():
         conn.execute('''CREATE TABLE IF NOT EXISTS explanations
                         (id INTEGER PRIMARY KEY, item_name TEXT, explanation TEXT, points FLOAT)''')
         conn.execute('''CREATE TABLE IF NOT EXISTS criteria
-                        (id INTEGER PRIMARY KEY, criteria_user TEXT, criteria_admin TEXT)''')
+                        (id INTEGER PRIMARY KEY, criteria_user TEXT)''')
         conn.commit()
 
 @app.route('/getTopClasses', methods=['GET'])
@@ -86,9 +94,9 @@ def get_classes():
 def get_criteria():
     with sqlite3.connect('database.db') as conn:
         cur = conn.cursor()
-        cur.execute("SELECT id, criteria_admin FROM criteria")
+        cur.execute("SELECT id, criteria_user FROM criteria")
         data = cur.fetchall()
-    return jsonify([{'id': row[0], 'criteria_admin': row[1]} for row in data])
+    return jsonify([{'id': row[0], 'criteria_user': row[1]} for row in data])
 
 @app.route('/addClass', methods=['POST'])
 @login_required
@@ -146,26 +154,15 @@ def add_points():
 @login_required
 def add_criteria():
     criteriaUser = request.json['criteriaUser']
-    criteriaAdmin = request.json['criteriaAdmin']
 
     with sqlite3.connect('database.db') as conn:
         cur = conn.cursor()
         print(criteriaUser)
 
-        cur.execute("INSERT INTO criteria (criteria_user, criteria_admin) VALUES (?, ?)",
-                    (criteriaUser, criteriaAdmin))
+        cur.execute("INSERT INTO criteria (criteria_user) VALUES (?)",
+                    (criteriaUser))
         conn.commit()
         return jsonify({'message': 'Kriterijas pievinoti veiksmigi'})
-        
-# @app.route('/getClassDetails', methods=['POST'])
-# def get_class_details():
-#     class_name = request.json['class']
-#     with sqlite3.connect('database.db') as conn:
-#         cur = conn.cursor()
-#         cur.execute("SELECT points FROM classes WHERE name = ?", (class_name,))
-#         cur.execute("SELECT explanation, points FROM explanations WHERE item_name = ?", (class_name,))
-#         data = cur.fetchone()
-#     return jsonify(count=data[0])
 
 @app.route('/getClassDetails', methods=['POST'])
 def get_class_details():
@@ -187,6 +184,46 @@ def get_class_details():
         }
         
     return jsonify(data)
+
+@app.route('/upload_criteria', methods=['POST'])
+def upload_criteria():
+    UPLOAD_FOLDER = os.getenv('PDF_FOLDER', 'uploads')  # Указать путь к папке для загрузки
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    
+    files = request.files
+    
+    if 'pdf' in files:
+        file1 = files['pdf']
+        
+        if file1.filename == '':
+            return jsonify({'error': 'No selected file for the first PDF'}), 400
+        
+        if file1 and file1.filename.endswith('.pdf'):
+            filename1 = 'kriterijas.pdf'  # Задать имя для сохраненного первого файла
+            file_path1 = os.path.join(UPLOAD_FOLDER, filename1)
+            file1.save(file_path1)
+            response_message = 'First file successfully uploaded'
+        else:
+            return jsonify(error='Invalid file format for the first PDF, only PDFs are allowed'), 400
+    
+    if 'pdf_1' in files:
+        file2 = files['pdf_1']
+        
+        if file2.filename == '':
+            return jsonify({'error': 'No selected file for the second PDF'}), 400
+        
+        if file2 and file2.filename.endswith('.pdf'):
+            filename2 = 'grafiks.pdf'  # Задать имя для сохраненного второго файла
+            file_path2 = os.path.join(UPLOAD_FOLDER, filename2)
+            file2.save(file_path2)
+            response_message = 'Second file successfully uploaded'
+        else:
+            return jsonify(error='Invalid file format for the second PDF, only PDFs are allowed'), 400
+    
+    if 'pdf' not in files and 'pdf_1' not in files:
+        return jsonify({'error': 'No files part'}), 400
+    
+    return jsonify(message=response_message), 200
 
 
 if __name__ == '__main__':

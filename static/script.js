@@ -7,31 +7,6 @@ function fetchClasses() {
     });
 }
 
-// function showDetails() {
-//     const classSelect = document.getElementById('classSelect').value;
-//     const details = document.getElementById('details');
-//     const classDetails = document.getElementById('classDetails');
-//     const classExplanation = document.getElementById('classExplanation');
-// 
-//     fetch('/getClassDetails', {
-//         method: 'POST',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify({ class: classSelect })
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         classDetails.innerHTML = `
-//             Punktu skaits: ${data.total_points}<br>
-//         `;
-//         details.style.display = 'block';
-//         classExplanation.innerHTML= data.map(cls =>`
-//             <div class="classExplanation_div">
-//                 <p>${cls.explanation}</p><p class="two">${cls.points_added}</p>
-//             </div>
-//         `).join('');
-//     });
-// }
-
 function showDetails() {
     const classSelect = document.getElementById('classSelect').value;
     const details = document.getElementById('details');
