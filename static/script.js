@@ -1,5 +1,10 @@
 function fetchClasses() {
-    fetch('/getClasses')
+    var grupas = document.getElementById('toggleSwitch').checked;
+    fetch('/getClasses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ group: grupas })
+    })
     .then(response => response.json())
     .then(classes => {
         const classSelect = document.getElementById('classSelect');
@@ -42,7 +47,12 @@ function showDetails() {
 
 
 function updateTopClasses() {
-    fetch('/getTopClasses')
+    var grupas = document.getElementById('toggleSwitch').checked;
+    fetch('/getTopClasses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ group: grupas })
+    })
     .then(response => response.json())
     .then(data => {
         const topClassesDiv = document.getElementById('topClasses');
@@ -54,6 +64,8 @@ function updateTopClasses() {
         `).join('');
     });
 }
+
+document.getElementById('toggleSwitch').addEventListener('change', fetchClasses(), updateTopClasses())
 
 // Обновление каждые 60 секунд
 setInterval(updateTopClasses, 60000);
