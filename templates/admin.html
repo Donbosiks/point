@@ -12,22 +12,28 @@
 <body>
     <div class="container" id="admin-container">
         <h1>Pievienot klasi</h1>
-        <input type="text" id="className" placeholder="Klases nosaukums">
-        <input class="submit" type="submit" onclick="addClass()" value="Pievienot"></input>
+        <form action="/addClass" method="POST">
+            <input type="text" name="className" placeholder="Klases nosaukums">
+            <input class="submit" type="submit" value="Pievienot"></input>
+        </form>
         
         <h1>Punktu pievienošana</h1>
-            <select id="existingClassSelect"></select>
-            <input type="number" id="classPoints" placeholder="Punkti">
-            <select id="criteriaSelect" onchange="check_value()">
+        <form action="/addPoints" method="post">
+            <select id="existingClassSelect" name="existingClassSelect"></select>
+            <input type="number" id="classPoints" name="classPoints" placeholder="Punkti">
+            <select id="criteriaSelect" name="criteriaSelect" onchange="check_value()">
                 <option value="cits" class="cits">Cits...</option>
                 <option disabled selected>Izvelaties Kriteriju</option>
             </select>
-            <input type="text" id="classExplanation" placeholder="Skaidrojums">
-            <input class="submit" type="submit" onclick="addPoints()" value="Pievienot"></input>
+            <input type="text" id="classExplanation" name="classExplanation" placeholder="Skaidrojums">
+            <input class="submit" type="submit" value="Pievienot"></input>
+        </form>
 
         <h1>Kriteriju pievienošana</h1>
-            <input type="text" id="criteriaUser" placeholder="Kriterijas">
-            <input class="submit" type="submit" onclick="addCriteria()" value="Pievienot"></input>
+        <form action="/addCriteria" method="post">
+            <input type="text" id="criteriaUser" name="criteriaUser" placeholder="Kriterijas">
+            <input class="submit" type="submit" value="Pievienot"></input>
+        </form>
 
             <h2>Ielupladet PDF Failu</h2> 
                 <form id="uploadForm" enctype="multipart/form-data" style="display: flex; justify-content: center;"> 

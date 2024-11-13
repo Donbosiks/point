@@ -1,5 +1,9 @@
 function fetchClasses() {
-    fetch('/getClasses')
+    fetch('/getClasses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ group: null })
+    })
     .then(response => response.json())
     .then(classes => {
         const existingClassSelect = document.getElementById('existingClassSelect');
@@ -29,59 +33,6 @@ function check_value() {
 }
 
 document.addEventListener('DOMContentLoaded', fetchCriteria);
-
-function addClass() {
-    const className = document.getElementById('className').value;
-
-    fetch('/addClass', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: className})
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-        fetchClasses(); // Обновление списка классов
-    });
-}
-
-function addPoints() {
-    const className = document.getElementById('existingClassSelect').value;
-    const classPoints = parseInt(document.getElementById('classPoints').value);
-    let classExplanation = document.getElementById('criteriaSelect').value;
-
-    if(document.getElementById('criteriaSelect').value == "cits"){
-        classExplanation = document.getElementById("classExplanation").value;
-    }
-    
-
-    fetch('/addPoints', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: className, points: classPoints, explanation: classExplanation })
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-    });
-}
-
-function addCriteria() {
-    const criteriaUser = document.getElementById('criteriaUser').value;
-    const criteriaAdmin = document.getElementById('criteriaAdmin').value;
-
-    console.log(criteriaUser)
-
-    fetch('/addCriteria', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({criteriaUser: criteriaUser, criteriaAdmin: criteriaAdmin })
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-    });
-}
 
 function uploadPDF() {
     const formData = new FormData();

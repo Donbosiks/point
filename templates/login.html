@@ -6,17 +6,16 @@
     <title>Logins</title>
     <link rel="icon" href="/static/logo.png" type="image/icon type">
     <link rel="stylesheet" href="/static/styles.css">
-    <script src="/static/login.js" defer></script>
     <link rel="preload" href="/static/font/GaramondPremrPro-Bd.woff2" as="font" type="font/woff2" crossorigin>
 </head>
 <body>
     <div class="container" id="login-container">
         <h2>Ielogosana admin paneli</h2>
-        <form>
+        <form action="/login_check" method="post" type="application/json">
             <input type="text" id="username" name="username" placeholder="Logins"><br><br>
             <input type="password" id="password" name="password" placeholder="Parole"><br>
             <p id="login_error">Logins vai parole nepareiza</p>
-            <input class="submit" type="submit" placeholder="Login" onclick="login()" value="Iiet sistema"></input>
+            <input class="submit" type="submit" placeholder="Login" value="Iiet sistema"></input>
         </form>
     </div>
 </body>

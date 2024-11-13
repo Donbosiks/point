@@ -18,13 +18,13 @@ class User(UserMixin):
 
 @admin_bp.route('/login_check', methods=['POST'])
 def login_check():
-    login_data = request.json
+    login_data = request.form
     if login_data['username'] == os.getenv('LOGIN') and login_data['password'] == os.getenv('PASSWORD'):
         user = User(id=login_data['username'])
         login_user(user, duration=timedelta(hours=int(os.getenv('LOGIN_TIME'))))
-        return jsonify({'redirect': url_for('admin.admin')}), 200
+        return redirect(url_for('admin.admin')), 200
     else:
-        return jsonify({}), 401
+        return 401
 
 @admin_bp.route('/logout')
 @login_required
@@ -48,11 +48,11 @@ def get_criteria():
 @admin_bp.route('/addClass', methods=['POST'])
 @login_required
 def add_class():
-    new_class = request.json
-    school_class = new_class['name']
+    new_class = request.form
+    school_class = new_class['className']
 
     if len(school_class) > 4:
-        return jsonify(message='Klase nebija pievienota (Simbolu skaits vairak neka 4)'), 401
+        return redirect(url_for("admin.admin")), 401
 
     with sqlite3.connect('database.db') as conn:
         cur = conn.cursor()
@@ -62,7 +62,7 @@ def add_class():
         existing_item = cur.fetchone()
         
         if existing_item:
-            return jsonify(message='Klase jau eksiste'), 400
+            return redirect(url_for("admin.admin")), 401
         
         # Добавление новой записи
         conn.execute("INSERT INTO classes (name, points) VALUES (?, ?)", (school_class, 0))
@@ -70,15 +70,15 @@ def add_class():
                      (school_class, 'Klases izveidošana', 0))
         conn.commit()
     
-    return jsonify(message='Klase bija pievinota')
+    return redirect(url_for("admin.admin")), 200
 
 
 
 @admin_bp.route('/addPoints', methods=['POST'])
 @login_required
 def add_points():
-    class_name = request.json['name']
-    points = request.json['points']
+    class_name = request.form['existingClassSelect']
+    points = request.form['classPoints']
 
     try:
         points = float(points)
@@ -91,7 +91,10 @@ def add_points():
     if points == 0:
         return jsonify({'message': 'Punkti nebija pievinoti, jo punktu skaits neatbilst intervalam'}), 415
          
-    explanation = request.json['explanation']
+    explanation = request.form['criteriaSelect']
+
+    if explanation == "cits":
+        explanation = request.form['classExplanation']
 
     with sqlite3.connect('database.db') as conn:
         cur = conn.cursor()
@@ -111,7 +114,7 @@ def add_points():
 @admin_bp.route('/addCriteria', methods=['POST'])
 @login_required
 def add_criteria():
-    criteriaUser = request.json['criteriaUser']
+    criteriaUser = request.form['criteriaUser']
 
     with sqlite3.connect('database.db') as conn:
         cur = conn.cursor()

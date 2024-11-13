@@ -37,10 +37,13 @@ def get_classes():
     group = request.json['group']
     with sqlite3.connect('database.db') as conn:
         cur = conn.cursor()
-        if group == True:
-            cur.execute("SELECT id, name FROM classes WHERE CAST(SUBSTR(name, 1, INSTR(name, '.') - 1) AS INTEGER) BETWEEN 7 AND 12")
-        else:
-            cur.execute("SELECT id, name FROM classes WHERE CAST(SUBSTR(name, 1, INSTR(name, '.') - 1) AS INTEGER) BETWEEN 2 AND 6")
+        match group:
+            case True:
+                cur.execute("SELECT id, name FROM classes WHERE CAST(SUBSTR(name, 1, INSTR(name, '.') - 1) AS INTEGER) BETWEEN 7 AND 12")
+            case False:
+                cur.execute("SELECT id, name FROM classes WHERE CAST(SUBSTR(name, 1, INSTR(name, '.') - 1) AS INTEGER) BETWEEN 2 AND 6")
+            case _:
+                cur.execute("SELECT id, name FROM classes")
         data = cur.fetchall()
     return jsonify([{'id': row[0], 'name': row[1]} for row in data])
 
