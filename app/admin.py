@@ -22,7 +22,7 @@ def login_check():
     if login_data['username'] == os.getenv('LOGIN') and login_data['password'] == os.getenv('PASSWORD'):
         user = User(id=login_data['username'])
         login_user(user, duration=timedelta(hours=int(os.getenv('LOGIN_TIME'))))
-        return redirect(url_for('admin.admin')), 200
+        return redirect(url_for('admin.admin')), 302
     else:
         return 401
 
@@ -52,7 +52,7 @@ def add_class():
     school_class = new_class['className']
 
     if len(school_class) > 4:
-        return redirect(url_for("admin.admin")), 401
+        return jsonify({'message': 'Klase nebija pievinoti, jo klašu simbolu skaits vairak neka 4'}), 415
 
     with sqlite3.connect('database.db') as conn:
         cur = conn.cursor()
@@ -70,7 +70,7 @@ def add_class():
                      (school_class, 'Klases izveidošana', 0))
         conn.commit()
     
-    return redirect(url_for("admin.admin")), 200
+    return redirect(url_for("admin.admin")), 302
 
 
 
@@ -107,9 +107,9 @@ def add_points():
             cur.execute("INSERT INTO explanations (item_name, explanation, points) VALUES (?, ?, ?)",
                         (class_name, explanation, points))
             conn.commit()
-            return jsonify({'message': 'Punkti pievinoti veiksmigi'})
+            return redirect(url_for("admin.admin")), 302
         else:
-            return jsonify({'message': 'Klase nebija atrasta'})
+            return jsonify({'message': 'Klase nebija atrasta'}), 400
         
 @admin_bp.route('/addCriteria', methods=['POST'])
 @login_required
@@ -118,51 +118,66 @@ def add_criteria():
 
     with sqlite3.connect('database.db') as conn:
         cur = conn.cursor()
-        print(criteriaUser)
+        conn.execute("INSERT INTO criteria (criteria_user) VALUES (?)", (f"{criteriaUser}",))
 
-        cur.execute("INSERT INTO criteria (criteria_user) VALUES (?)",
-                    (criteriaUser))
         conn.commit()
-        return jsonify({'message': 'Kriterijas pievinoti veiksmigi'})
+        return redirect(url_for("admin.admin")), 302
+
 
 @admin_bp.route('/upload_criteria', methods=['POST'])
 @login_required
-def upload_criteria():
+def pdfs():
+
     UPLOAD_FOLDER = os.getenv('PDF_FOLDER')  # Указавает путь к папке для сохранения
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-    
-    files = request.files
-    
-    if 'pdf' in files:
-        file1 = files['pdf']
+
+    message = None
+    if request.method == 'POST':
+        files = request.files
         
-        if file1.filename == '':
-            return jsonify({'error': 'No selected file for the first PDF'}), 400
+        if 'pdf' in files:
+            file1 = files['pdf']
+            
+            if file1.filename == '':
+                return redirect(url_for('admin.admin', message='No selected file for the first PDF')), 302
+            
+            if file1 and file1.filename.endswith('.pdf'):
+                filename1 = 'kriterijas.pdf'
+                file_path1 = os.path.join(UPLOAD_FOLDER, filename1)
+                file1.save(file_path1)
+                message = 'Kriterija bija atjanotas'
+            else:
+                return redirect(url_for('admin.admin', message='Invalid file format for the first PDF, only PDFs are allowed')), 302
         
-        if file1 and file1.filename.endswith('.pdf'):
-            filename1 = 'kriterijas.pdf'  
-            file_path1 = os.path.join(UPLOAD_FOLDER, filename1)
-            file1.save(file_path1)
-            response_message = 'Kriterija bija atjanotas'
-        else:
-            return jsonify(error='Invalid file format for the first PDF, only PDFs are allowed'), 400
-    
-    if 'pdf_1' in files:
-        file2 = files['pdf_1']
+        if 'pdf_1' in files:
+            file2 = files['pdf_1']
+            
+            if file2.filename == '':
+                return redirect(url_for('admin.admin', message='No selected file for the second PDF')), 302
+            
+            if file2 and file2.filename.endswith('.pdf'):
+                filename2 = 'grafiks.pdf'
+                file_path2 = os.path.join(UPLOAD_FOLDER, filename2)
+                file2.save(file_path2)
+                message = 'Dežures grafiks bija atjanotas'
+            else:
+                return redirect(url_for('admin.admin', message='Invalid file format for the second PDF, only PDFs are allowed')), 302
         
-        if file2.filename == '':
-            return jsonify({'error': 'No selected file for the second PDF'}), 400
+        if 'pdf' not in files and 'pdf_1' not in files:
+            return redirect(url_for('admin.admin', message='No files part'))
+
+    return redirect(url_for('admin.admin', message=message)), 302
+
+
+@admin_bp.route('/clear_database', methods=['POST'])
+@login_required
+def clear_database(): 
+    with sqlite3.connect('database.db') as conn:
+        cur = conn.cursor()
         
-        if file2 and file2.filename.endswith('.pdf'):
-            filename2 = 'grafiks.pdf'
-            file_path2 = os.path.join(UPLOAD_FOLDER, filename2)
-            file2.save(file_path2)
-            response_message = 'Dežures grafiks bija atjanotas'
-        else:
-            return jsonify(error='Invalid file format for the second PDF, only PDFs are allowed'), 400
-    
-    if 'pdf' not in files and 'pdf_1' not in files:
-        return jsonify({'error': 'No files part'}), 400
-    
-    return jsonify(message=response_message), 200
+        # Проверка, существует ли уже запись с таким именем
+        cur.execute("DELETE FROM classes")
+        cur.execute("DELETE FROM explanations")
+        cur.execute("DELETE FROM criteria")
+        conn.commit() 
+    return redirect(url_for("admin.admin")), 302
 

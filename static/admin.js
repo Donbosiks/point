@@ -34,39 +34,5 @@ function check_value() {
 
 document.addEventListener('DOMContentLoaded', fetchCriteria);
 
-function uploadPDF() {
-    const formData = new FormData();
-    const pdfFile = document.getElementById('pdfFile').files[0];
-    const pdfFile_1 = document.getElementById('pdfFile_1').files[0];
-
-    // Проверка и добавление первого файла
-    if (pdfFile) {
-        formData.append('pdf', pdfFile);
-    } else {
-        formData.append('pdf', 'none');
-    }
-
-    // Проверка и добавление второго файла
-    if (pdfFile_1) {
-        formData.append('pdf_1', pdfFile_1);
-    } else {
-        formData.append('pdf_1', 'none');
-    }
-
-    fetch('/upload_criteria', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        document.getElementById('response').innerText = 'An error occurred while uploading the file.';
-    });
-}
-
-
 
 fetchClasses();

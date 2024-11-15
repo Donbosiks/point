@@ -36,15 +36,20 @@
         </form>
 
             <h2>Ielupladet PDF Failu</h2> 
-                <form id="uploadForm" enctype="multipart/form-data" style="display: flex; justify-content: center;"> 
-                    <div class="fileSelect">
-                        <label for="pdfFile" id="pdfLabel">Izvelaties kriteriju</label>
-                        <input type="file" id="pdfFile" name="pdf" accept="application/pdf" required>
-                        <label for="pdfFile_1" id="pdfLabel">Izvelaties dežures grafiku</label>
-                        <input type="file" id="pdfFile_1" name="pdf" accept="application/pdf" required>
-                    </div>
-                    <button type="button" onclick="uploadPDF()">Ielupladet</button> 
-                </form>
+            <form action="/upload_criteria" method="post" enctype="multipart/form-data" style="display: flex; justify-content: center;">
+                <div class="fileSelect"> 
+                    <label for="pdfFile" id="pdfLabel">Izvelaties kriteriju</label> 
+                    <input type="file" id="pdfFile" name="pdf" accept="application/pdf" required> 
+                    <label for="pdfFile_1" id="pdfLabel">Izvelaties dežures grafiku</label> 
+                    <input type="file" id="pdfFile_1" name="pdf_1" accept="application/pdf" required> 
+                </div> 
+                <button type="submit">Ielupladet</button> 
+            </form> 
+            {% if message %} <p>{{ message }}</p> {% endif %}
+
+            <form action="/clear_database" method="post">
+                <button class="clear_bt">Atirit datu bazi</button>
+            </form>
         
 
     </div>

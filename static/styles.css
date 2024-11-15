@@ -188,6 +188,11 @@ footer {
     input:checked + .slider:before { transform: translateX(26px); } 
     .slider.round { border-radius: 34px; } .slider.round:before { border-radius: 50%; } 
 
+.clear_bt {
+    background-color: red;
+    color: white;
+}
+
 @media (max-width: 800px) {
     .main_body {
         background-size: auto 100%;

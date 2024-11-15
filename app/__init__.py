@@ -3,6 +3,7 @@ from datetime import timedelta
 from flask_login import LoginManager, UserMixin
 from dotenv import load_dotenv
 import os
+from app.sqlite_model import init_db
 
 class User(UserMixin):
     def __init__(self, id):
@@ -10,6 +11,7 @@ class User(UserMixin):
 
 
 def create_app():
+    init_db()
     app = Flask(__name__, template_folder="../templates", static_folder="../static")
     load_dotenv()
     app.secret_key = os.getenv('SECRET_KEY')

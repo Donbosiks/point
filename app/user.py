@@ -24,7 +24,6 @@ def get_top_classes():
     group = request.json['group']
     with sqlite3.connect('database.db') as conn:
         cur = conn.cursor()
-        print(group)
         if group == True:
             cur.execute("SELECT name, points FROM classes  WHERE CAST(SUBSTR(name, 1, INSTR(name, '.') - 1) AS INTEGER) BETWEEN 7 AND 12 ORDER BY points DESC LIMIT 3")
         else:
