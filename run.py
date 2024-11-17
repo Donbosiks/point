@@ -1,20 +1,24 @@
 from app import create_app
 from app import backup_db
 import threading
-import time
 
 app = create_app()
 
+def start_backup():
+    backup_db.start_backup()
+
 if __name__ == '__main__':
-    # Создаем потоки для каждой функции
-    thread1 = threading.Thread(app.run(debug=True))
-    thread2 = threading.Thread(backup_db.start_backup())
+    # Создаем поток для фоновой задачи
+    thread = threading.Thread(target=start_backup)
 
-    # Запускаем потоки
-    thread1.start()
-    thread2.start()
+    # Запускаем фоновую задачу
+    thread.start()
 
-    # app.run(debug=True)
-    # backup_db.start_backup()
+    # Запускаем Flask-приложение в главном потоке
+    app.run(debug=True)
+
+    # Ожидаем завершения фоновой задачи
+    thread.join()
+
 
 

@@ -15,8 +15,13 @@ body {
     flex-direction: column;
 }
 
+.main_h1 {
+    font-size: clamp(16px, 2.5rem, 40px);
+}
+
 .container {
     text-align: center;
+    border-radius: 15px;
 }
 
 h1 {
@@ -69,10 +74,12 @@ h1 {
 
     #top_class_head {
         font-weight: bold;
+        font-size: clamp(12px, 2rem, 30px);
     }
 
     #top_class_text {
         font-weight: normal;
+        font-size: clamp(10px, 1.2rem, 25px);
     }
 
 .classExplanation_div {
@@ -123,25 +130,23 @@ select, button, input {
     align-items: center;
 }
 
-#login_error {
-    display: none;
-    color: red;
-    font-size: 2vh;
+.Class_group {
+    font-size: clamp(10px, 1.5rem, 24px);
 }
 
 footer {
     position: absolute;
     display: flex;
-    justify-content: center;
-    width: 80%;
-    bottom: 2%;
+    justify-content: space-around;
+    bottom: min(1%, 5px);
+    width: 70%;
 }
 
     footer a {
-        margin-left: 1%;
-        margin-right: 1%;
         color: black;
         text-decoration: none;
+        font-size: clamp(10px, 2rem, 20px);
+        white-space: nowrap;
     }
 
 .fileSelect {
@@ -202,5 +207,9 @@ footer {
     select, button, input {
         font-size: 14px;
         padding: 8px;
+    }
+
+    .Class_group {
+        font-size: clamp(10px, 2rem, 24px);
     }
 }
