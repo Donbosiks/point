@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center;
+    /*justify-content: center;*/
     align-items: center;
     height: 100vh;
 }
@@ -22,6 +22,7 @@ body {
 .container {
     text-align: center;
     border-radius: 15px;
+    margin-bottom: 25vh;
 }
 
 h1 {
@@ -83,8 +84,9 @@ h1 {
     }
 
 .classExplanation_div {
-    display: -webkit-box;
+    display: flex;
     width: 80%;
+    gap: 20%;
 }
 
     .classExplanation_div .two {
@@ -115,10 +117,11 @@ select, button, input {
         margin-left: auto;
         margin-right: auto;
         align-items: center;
+        gap: 20%;
     }
 
     #classExplanation_main p{
-        width: 80%;
+        width: 30%;
     }
 
 #classExplanation {
@@ -135,7 +138,7 @@ select, button, input {
 }
 
 footer {
-    position: absolute;
+    position: relative;
     display: flex;
     justify-content: space-around;
     bottom: min(1%, 5px);
@@ -198,7 +201,9 @@ footer {
     color: white;
 }
 
-@media (max-width: 800px) {
+
+
+@media (orientation: portrait) {
     .main_body {
         background-size: auto 100%;
         background-position: center center;
@@ -207,9 +212,28 @@ footer {
     select, button, input {
         font-size: 14px;
         padding: 8px;
+        width: 20vw;
+        height: 10vw;
+        font-weight: bold;
     }
 
     .Class_group {
         font-size: clamp(10px, 2rem, 24px);
     }
+
+    .container {
+        position: relative;
+        margin-top: 5vh;
+      }
+
+      footer {
+        width: 90%;
+        margin-bottom: 5vh;
+        display: flex;
+        gap: 1vw;
+      }
+
+      footer a {
+        font-size: 1rem;
+      }
 }

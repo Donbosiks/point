@@ -1,6 +1,6 @@
 # About project 
 
-This is a small 3 page project that aims to make point counting easier for the class. 
+This is a small 3 page project that aims to make point counting easier for the class. You can get updates from [github](https://github.com/Donbosiks/point)
 
 ## Installation 
 To install the project, you will have to install several dependencies 
@@ -26,14 +26,14 @@ yay -S python-shedule
 
 ## Launch code
 
-##### Creating db file
-First, you need to create a *database.db* file
-```bash
-touch database.db
-```
-##### Launch project
 ```bash
 cd /path-to-project/
 python run.py
 ```
 
+## In the project plans 
+
+[] - Fix many problems with phones frontend
+[] - Update design
+[] - Maintain a system of maximum points and calculations relative to it
+[] - Add printout of all items
