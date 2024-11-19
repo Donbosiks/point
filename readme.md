@@ -33,7 +33,8 @@ python run.py
 
 ## In the project plans 
 
-[] - Fix many problems with phones frontend
-[] - Update design
-[] - Maintain a system of maximum points and calculations relative to it
-[] - Add printout of all items
+- [x] - Add Backup's and Database reset
+- [ ] - Fix many problems with phones frontend
+- [ ] - Update design
+- [ ] - Maintain a system of maximum points and calculations relative to it
+- [ ] - Add printout of all items
