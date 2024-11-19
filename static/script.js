@@ -12,37 +12,26 @@ function fetchClasses() {
     });
 }
 
-function showDetails() {
+function showDetails() { 
     const classSelect = document.getElementById('classSelect').value;
     const details = document.getElementById('details');
     const classDetails = document.getElementById('classDetails');
     const classExplanation = document.getElementById('classExplanation_main');
+    fetch('/getClassDetails', { method: 'POST', headers: 
+        { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ class: classSelect }) }) 
+        .then(response => response.json()) 
+        .then(data => { // Отображение общего количества очков 
+            classDetails.innerHTML = ` Punktu skaits: ${data.total_points}<br> `; // Отображение последних трех добавлений 
+            classExplanation.innerHTML = data.details.map(cls => ` <div class="classExplanation_div"> <p>${cls.explanation}</p><p class="two">${cls.points_added}</p> </div> `).join(''); // Показать блок с деталями 
+            details.style.display = 'block'; // Применение стилей к новым элементам 
+            setTimeout(() => { document.querySelectorAll('.classExplanation_div').forEach(div => { div.classList.add('enlarged');
 
-    fetch('/getClassDetails', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ class: classSelect })
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Отображение общего количества очков
-        classDetails.innerHTML = `
-            Punktu skaits: ${data.total_points}<br>
-        `;
-
-        // Отображение последних трех добавлений
-        classExplanation.innerHTML = data.details.map(cls => `
-            <div class="classExplanation_div">
-                <p>${cls.explanation}</p><p class="two">${cls.points_added}</p>
-            </div>
-        `).join('');
-
-        // Показать блок с деталями
-        details.style.display = 'block';
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+            });
+            }, 0);
+            }) .catch(error => { console.error('Error:', error);
+            
+        });
 }
 
 

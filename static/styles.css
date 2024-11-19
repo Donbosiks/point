@@ -1,18 +1,25 @@
+html {
+    height: 120%;
+}
+
 body {
     margin: 0;
     padding: 0;
     display: flex;
-    /*justify-content: center;*/
     align-items: center;
     height: 100vh;
+    
 }
 
 .main_body {
     background-image: url("wallpaper.png");
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: auto 100%;
+    background-position: center center;
+    /* background-size: cover; */
     display: flex;
     flex-direction: column;
+    height: 100vh;
 }
 
 .main_h1 {
@@ -22,7 +29,7 @@ body {
 .container {
     text-align: center;
     border-radius: 15px;
-    margin-bottom: 25vh;
+    margin-top: 13vh;
 }
 
 h1 {
@@ -84,9 +91,8 @@ h1 {
     }
 
 .classExplanation_div {
-    display: flex;
+    display: -webkit-box;
     width: 80%;
-    gap: 20%;
 }
 
     .classExplanation_div .two {
@@ -117,12 +123,11 @@ select, button, input {
         margin-left: auto;
         margin-right: auto;
         align-items: center;
-        gap: 20%;
     }
 
-    #classExplanation_main p{
-        width: 30%;
-    }
+    /* #classExplanation_main p{
+        width: 80%;
+    } */
 
 #classExplanation {
     display: none;
@@ -138,10 +143,12 @@ select, button, input {
 }
 
 footer {
-    position: relative;
+    /* position: absolute; */
     display: flex;
+    margin-top: auto;
+    margin-bottom: 2vh;
     justify-content: space-around;
-    bottom: min(1%, 5px);
+    /* bottom: min(1%, 5px); */
     width: 70%;
 }
 
@@ -201,9 +208,7 @@ footer {
     color: white;
 }
 
-
-
-@media (orientation: portrait) {
+@media (max-width: 800px) {
     .main_body {
         background-size: auto 100%;
         background-position: center center;
@@ -212,28 +217,9 @@ footer {
     select, button, input {
         font-size: 14px;
         padding: 8px;
-        width: 20vw;
-        height: 10vw;
-        font-weight: bold;
     }
 
     .Class_group {
         font-size: clamp(10px, 2rem, 24px);
     }
-
-    .container {
-        position: relative;
-        margin-top: 5vh;
-      }
-
-      footer {
-        width: 90%;
-        margin-bottom: 5vh;
-        display: flex;
-        gap: 1vw;
-      }
-
-      footer a {
-        font-size: 1rem;
-      }
 }
