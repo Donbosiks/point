@@ -125,10 +125,6 @@ select, button, input {
         align-items: center;
     }
 
-    /* #classExplanation_main p{
-        width: 80%;
-    } */
-
 #classExplanation {
     display: none;
     flex-direction: column;
@@ -143,12 +139,10 @@ select, button, input {
 }
 
 footer {
-    /* position: absolute; */
     display: flex;
     margin-top: auto;
     margin-bottom: 2vh;
     justify-content: space-around;
-    /* bottom: min(1%, 5px); */
     width: 70%;
 }
 
